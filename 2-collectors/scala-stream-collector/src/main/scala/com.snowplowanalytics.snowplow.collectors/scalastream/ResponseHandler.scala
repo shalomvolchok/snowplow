@@ -91,9 +91,9 @@ class ResponseHandler(config: CollectorConfig, sinks: CollectorSinks)(implicit c
     } else {
 
       // Make a Tuple2 with the ip address and the shard partition key
-      val ipKey = ip match {
-        case null   => ("unknown", UUID.randomUUID.toString)
-        case someIp => (someIp.toString, someIp.toString)
+      val ipKey = ip.toOption.map(_.getHostAddress) match {
+        case None     => ("unknown", UUID.randomUUID.toString)
+        case Some(ip) => (ip, ip)
       }
 
       // Use the same UUID if the request cookie contains `sp`.
